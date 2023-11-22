@@ -48,7 +48,7 @@ func initApp(mongoClient *mongo.Client){
 func main(){
 	server = gin.Default()
 	server.Use(cors.New(cors.Config{
-		AllowOrigins: []string{"https://poultry-front.vercel.app/"},
+		AllowOrigins: []string{"https://poultry-front.vercel.app"},
 		AllowMethods: []string{"GET", "POST", "PUT", "DELETE", "OPTIONS"},
 		AllowHeaders: []string{"Origin", "Content-Type"},
 	  }))
