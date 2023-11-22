@@ -1,0 +1,8 @@
+services:
+  - name: poultry-app
+    type: web
+    buildCommand: go build -o main
+    startCommand: ./main
+    env:
+      - key: PORT
+        value: 4000  # Set the port your Golang app listens to
