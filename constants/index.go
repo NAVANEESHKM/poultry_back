@@ -2,7 +2,7 @@
 
 package constants
 
-const ConnectionString ="mongodb+srv://user:pass@cluster0.mom8ir1.mongodb.net/"
+const ConnectionString ="mongodb+srv://user:pass@cluster0.mom8ir1.mongodb./"
 //
 //mongodb+srv://navaneeshmuthusamy:Neesh04%4012%402002@cluster0.j5hnmx6.mongodb.net/??retryWrites=true&w=majority
 const Port =":4000"
