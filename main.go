@@ -2,7 +2,7 @@ package main
 
 import (
 	"context"
-	"os"
+	"fmt"
 
 	"backend/config"
 	"backend/constants"
@@ -59,11 +59,7 @@ func main() {
 	}
 
 	initApp(mongoclient)
-	// fmt.Println("server running on port", constants.Port)
-	// log.Fatal(server.Run(constants.Port))
-	port := os.Getenv("PORT")
-	if port == "" {
-		port = "8080" // Default to 8080 if PORT is not set
-	}
-	log.Fatal(server.Run("0.0.0.0:" + port))
+	fmt.Println("server running on port", constants.Port)
+	log.Fatal(server.Run(constants.Port))
+
 }
