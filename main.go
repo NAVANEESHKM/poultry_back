@@ -2,15 +2,16 @@ package main
 
 import (
 	"context"
-	"fmt"
-	
-    "github.com/gin-contrib/cors"
-	"log"
+	"os"
+
 	"backend/config"
 	"backend/constants"
 	"backend/controllers"
 	"backend/routes"
 	"backend/services"
+	"log"
+
+	"github.com/gin-contrib/cors"
 
 	//	"rest-api/services"
 
@@ -18,15 +19,13 @@ import (
 	"go.mongodb.org/mongo-driver/mongo"
 )
 
-
 var (
 	mongoclient *mongo.Client
 	ctx         context.Context
-	server         *gin.Engine
+	server      *gin.Engine
 )
 
-
-func initApp(mongoClient *mongo.Client){
+func initApp(mongoClient *mongo.Client) {
 	//Customer Collection
 	ctx = context.TODO()
 	PoultryCollection := mongoClient.Database(constants.DatabaseName).Collection("employee")
@@ -34,32 +33,37 @@ func initApp(mongoClient *mongo.Client){
 	OrderCollection := mongoClient.Database(constants.DatabaseName).Collection("order")
 	CustomerCollection := mongoClient.Database(constants.DatabaseName).Collection("signup")
 	CheckCollection := mongoClient.Database(constants.DatabaseName).Collection("Login")
-	UserCollection:=mongoClient.Database(constants.DatabaseName).Collection("user")
-	AdminCollection:=mongoClient.Database(constants.DatabaseName).Collection("admin")
-	GraphCollection:=mongoClient.Database(constants.DatabaseName).Collection("graph")
-	PoultryService := services.PoultryServiceInit(PoultryCollection,HatchingCollection,OrderCollection,CustomerCollection,CheckCollection,UserCollection,AdminCollection,GraphCollection,ctx)
+	UserCollection := mongoClient.Database(constants.DatabaseName).Collection("user")
+	AdminCollection := mongoClient.Database(constants.DatabaseName).Collection("admin")
+	GraphCollection := mongoClient.Database(constants.DatabaseName).Collection("graph")
+	PoultryService := services.PoultryServiceInit(PoultryCollection, HatchingCollection, OrderCollection, CustomerCollection, CheckCollection, UserCollection, AdminCollection, GraphCollection, ctx)
 	PoultryController := controllers.InitPoultryController(PoultryService)
-	routes.PoultryRoute(server,PoultryController)
+	routes.PoultryRoute(server, PoultryController)
 
 }
 
-//https://poultry-front.vercel.app
-//http://localhost:3000/
-func main(){
+// https://poultry-front.vercel.app
+// http://localhost:3000/
+func main() {
 	server = gin.Default()
 	server.Use(cors.New(cors.Config{
 		AllowOrigins: []string{"*"}, // Allow any origin
 		AllowMethods: []string{"GET", "POST", "PUT", "DELETE", "OPTIONS"},
 		AllowHeaders: []string{"Origin", "Content-Type"},
 	}))
-	
-	mongoclient,err :=config.ConnectDataBase()
-	defer   mongoclient.Disconnect(ctx)
-	if err!=nil{
+
+	mongoclient, err := config.ConnectDataBase()
+	defer mongoclient.Disconnect(ctx)
+	if err != nil {
 		panic(err)
 	}
-	
+
 	initApp(mongoclient)
-	fmt.Println("server running on port",constants.Port)
-	log.Fatal(server.Run(constants.Port))
+	// fmt.Println("server running on port", constants.Port)
+	// log.Fatal(server.Run(constants.Port))
+	port := os.Getenv("PORT")
+	if port == "" {
+		port = "8080" // Default to 8080 if PORT is not set
+	}
+	log.Fatal(server.Run("0.0.0.0:" + port))
 }
